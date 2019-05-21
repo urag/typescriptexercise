@@ -4,8 +4,21 @@
   "description": "managin products with REST API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+    "build:run": "./node_modules/.bin/tsc",
+    "build:clean": "rm -rf ./dist",
+    "build": "npm run build:clean&& npm run build:run",
+    "serve": "node dist/index.js",
+    "start": "npm run build && npm run serve"
+  } ,
   "author": "yura",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.5",
+    "@types/express": "^4.16.1",
+    "ts-node": "^8.1.0"
+  }
 }
