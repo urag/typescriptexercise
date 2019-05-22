@@ -37,5 +37,41 @@ export class ProductController {
         res.status(409).send("Product with given id is already present");
       }
     });
+
+    app.put("/api/products/:id", (req, res) => {
+      var id: number = req.params.id;
+      if (!isNaN(id)) {
+        var product = this.productsRepository.getById(id);
+        if (product) {
+          const productForUpdate = req.body as Product;
+          if (productForUpdate.name.length >= 3) {
+            productForUpdate.id = id.toString();
+            this.productsRepository.save(productForUpdate);
+            res.send(productForUpdate);
+          } else {
+            res.status(409).send("Name needs to be at least 3 characters");
+          }
+        } else {
+          res.sendStatus(404);
+        }
+      } else {
+        res.status(401).send("Id is not a number");
+      }
+    });
+
+    app.delete("/api/products/:id", (req, res) => {
+      var id: number = req.params.id;
+      if (!isNaN(id)) {
+        var product = this.productsRepository.getById(id);
+        if (product) {
+          this.productsRepository.removeById(id);
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(404);
+        }
+      } else {
+        res.status(400).send("Id is not a number");
+      }
+    });
   }
 }
