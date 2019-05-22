@@ -34,9 +34,9 @@ class ProductDemeRepository {
     }
 }
 ProductDemeRepository.products = [
-    new Product_1.Product("1", "Drinks", "CocaCola", 20),
-    new Product_1.Product("2", "Electronics", "PS4", 50),
-    new Product_1.Product("3", "Electronics", "Nokia Phone", 35)
+    new Product_1.Product("132423", "Drinks", "CocaCola", 20),
+    new Product_1.Product("23432", "Electronics", "PS4", 50),
+    new Product_1.Product("32342", "Electronics", "Nokia Phone", 35)
 ];
 exports.ProductDemeRepository = ProductDemeRepository;
 //# sourceMappingURL=productsrepo.js.map

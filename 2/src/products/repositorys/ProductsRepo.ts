@@ -3,9 +3,9 @@ import { Product } from "../models/Product";
 
 export class ProductDemeRepository implements CrudRepository {
   private static products: Product[] = [
-    new Product("1", "Drinks", "CocaCola", 20),
-    new Product("2", "Electronics", "PS4", 50),
-    new Product("3", "Electronics", "Nokia Phone", 35)
+    new Product("132423", "Drinks", "CocaCola", 20),
+    new Product("23432", "Electronics", "PS4", 50),
+    new Product("32342", "Electronics", "Nokia Phone", 35)
   ];
 
   save(obj: Product): Product | undefined {
