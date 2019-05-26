@@ -1,6 +1,5 @@
 const http = require('http');
 const port = 3000;
-const cluster = require('cluster');
 
 const reqHanler = (req, res) => {
     console.log("Worker %s got request %s", process.pid, req);
