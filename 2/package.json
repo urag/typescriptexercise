@@ -9,7 +9,7 @@
     "build": "npm run build:clean&& npm run build:run",
     "serve": "node dist/index.js",
     "start": "npm run build && npm run serve"
-  } ,
+  },
   "author": "yura",
   "license": "ISC",
   "dependencies": {
