@@ -1,14 +1,17 @@
-import { IRoutesProvider } from "./infrastractures/interfaces/routers/routes-provider-interface";
-import { ProductRoutes } from "./buisneslogic/products/routes/product-routes";
+import { IRoutesFactory } from "./infrastractures/interfaces/routers/routes-provider-interface";
 import { Application } from "express";
-import { CategoriesRoutes } from "./buisneslogic/categories/routes/categorie-routes";
+import { CategoriesController } from "./buisneslogic/categories/controllers/categories-controller";
+import { RestRoutesFactory } from "./infrastractures/utils/rest-controller-routes-factory"
+import { ProductsController } from "./buisneslogic/products/controllers/products-controller";
 
 export class RouteInstaller {
-    private routeProviders: IRoutesProvider[] = [new ProductRoutes(), new CategoriesRoutes()];
+    private routeProviders: IRoutesFactory[] = [new RestRoutesFactory(new CategoriesController(), "categories"), new RestRoutesFactory(new ProductsController(), "products")];
 
     constructor(app: Application) {
         this.routeProviders.forEach(rp => {
-            app.use("/api/" + rp.getUrlPrefix(), rp.getRouter());
+            const prefix = "/api/" + rp.getUrlPrefix();
+            console.log('Installing routes for:', prefix)
+            app.use(prefix, rp.getRouter());
         });
     }
 }

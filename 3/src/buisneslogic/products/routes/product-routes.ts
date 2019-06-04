@@ -4,9 +4,9 @@ var router = Router();
 
 import { IRestController } from "../../../infrastractures/interfaces/controllers/rest-controller-interface";
 import { ProductsController } from "../controllers/products-controller";
-import { IRoutesProvider } from "../../../infrastractures/interfaces/routers/routes-provider-interface";
+import { IRoutesFactory } from "../../../infrastractures/interfaces/routers/routes-provider-interface";
 
-export class ProductRoutes implements IRoutesProvider {
+export class ProductRoutes implements IRoutesFactory {
     urlPrefix: string = "products";
     router: Router = router;
     productsController: IRestController = new ProductsController();
