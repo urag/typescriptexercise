@@ -8,7 +8,8 @@ export class ProductController {
     app.get("/api/products/", (req, res) =>
       res.send(this.productsRepository.getAll())
     );
-
+    
+    
     app.get("/api/products/:id", (req, res) => {
       var id: number = req.params.id;
       if (!isNaN(id)) {
@@ -23,6 +24,7 @@ export class ProductController {
       }
     });
 
+    
     app.post("/api/products", (req, res) => {
       const product = req.body as Product;
       // Adding only if product with given id is not pressent yeat
