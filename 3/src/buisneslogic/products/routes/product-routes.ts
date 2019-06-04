@@ -2,9 +2,9 @@ var express = require('express');
 import { Router } from "express";
 var router = Router();
 
-import { IRestController } from "../../interfaces/controllers/rest-controller-interface";
+import { IRestController } from "../../../infrastractures/interfaces/controllers/rest-controller-interface";
 import { ProductsController } from "../controllers/products-controller";
-import { IRoutesProvider } from "../../interfaces/routers/routes-provider-interface";
+import { IRoutesProvider } from "../../../infrastractures/interfaces/routers/routes-provider-interface";
 
 export class ProductRoutes implements IRoutesProvider {
     urlPrefix: string = "products";

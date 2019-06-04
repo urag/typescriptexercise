@@ -2,8 +2,8 @@ var express = require('express');
 import { Router } from "express";
 var router = Router();
 
-import { IRestController } from "../../interfaces/controllers/rest-controller-interface";
-import { IRoutesProvider } from "../../interfaces/routers/routes-provider-interface";
+import { IRestController } from "../../../infrastractures/interfaces/controllers/rest-controller-interface";
+import { IRoutesProvider } from "../../../infrastractures/interfaces/routers/routes-provider-interface";
 import { CategoriesController } from "../controllers/categories-controller";
 
 export class CategoriesRoutes implements IRoutesProvider {

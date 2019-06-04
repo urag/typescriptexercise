@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ProductDemeRepository } from "../repositorys/products-repo";
 import { Product } from "../models/product";
-import { IRestController } from "../../interfaces/controllers/rest-controller-interface";
-import { ICrudRepository } from "../../interfaces/repositorys/crud-repository-interface";
+import { IRestController } from "../../../infrastractures/interfaces/controllers/rest-controller-interface";
+import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 
 
 export class ProductsController implements IRestController {

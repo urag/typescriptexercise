@@ -1,4 +1,4 @@
-import { ICrudRepository } from "../../interfaces/repositorys/crud-repository-interface";
+import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { Categorie } from "../model/categorie";
 
 export class CategorieDemeRepository implements ICrudRepository {

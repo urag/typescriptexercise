@@ -1,7 +1,7 @@
-import { IRoutesProvider } from "./interfaces/routers/routes-provider-interface";
-import { ProductRoutes } from "./products/routes/product-routes";
+import { IRoutesProvider } from "./infrastractures/interfaces/routers/routes-provider-interface";
+import { ProductRoutes } from "./buisneslogic/products/routes/product-routes";
 import { Application } from "express";
-import { CategoriesRoutes } from "./categories/routes/categorie-routes";
+import { CategoriesRoutes } from "./buisneslogic/categories/routes/categorie-routes";
 
 export class RouteInstaller {
     private routeProviders: IRoutesProvider[] = [new ProductRoutes(), new CategoriesRoutes()];

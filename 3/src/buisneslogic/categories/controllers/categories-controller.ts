@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
-import { IRestController } from "../../interfaces/controllers/rest-controller-interface";
-import { ICrudRepository } from "../../interfaces/repositorys/crud-repository-interface";
+import { IRestController } from "../../../infrastractures/interfaces/controllers/rest-controller-interface";
+import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { CategorieDemeRepository } from "../repositorys/categories-repo";
 import { Categorie } from "../model/categorie";
 
