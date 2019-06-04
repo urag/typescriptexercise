@@ -1,5 +1,5 @@
-import { ICrudRepository } from "../../interfaces/repositorys/ICrudRepository";
-import { Product } from "../models/Product";
+import { ICrudRepository } from "../../interfaces/repositorys/crud-repository-interface";
+import { Product } from "../models/product";
 
 export class ProductDemeRepository implements ICrudRepository {
   private static products: Product[] = [

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { ProductDemeRepository } from "../repositorys/productsrepo";
-import { Product } from "../models/Product";
-import { IRestController } from "../../interfaces/controllers/IRestController";
-import { ICrudRepository } from "../../interfaces/repositorys/ICrudRepository";
+import { ProductDemeRepository } from "../repositorys/products-repo";
+import { Product } from "../models/product";
+import { IRestController } from "../../interfaces/controllers/rest-controller-interface";
+import { ICrudRepository } from "../../interfaces/repositorys/crud-repository-interface";
 
 
 export class ProductsController implements IRestController {
@@ -11,6 +11,7 @@ export class ProductsController implements IRestController {
 
     get = (req: Request, res: Response, next: NextFunction) => {
         res.send(this.productsRepository.getAll())
+        next();
     }
 
     getById = (req: Request, res: Response, next: NextFunction) => {
@@ -25,6 +26,7 @@ export class ProductsController implements IRestController {
         } else {
             res.status(401).send("Id is not a number");
         }
+        next();
     }
 
     post = (req: Request, res: Response, next: NextFunction) => {
@@ -40,6 +42,7 @@ export class ProductsController implements IRestController {
         } else {
             res.status(409).send("Product with given id is already present");
         }
+        next();
     }
 
     put = (req: Request, res: Response, next: NextFunction) => {
@@ -61,6 +64,8 @@ export class ProductsController implements IRestController {
         } else {
             res.status(401).send("Id is not a number");
         }
+
+        next();
     }
 
     delete = (req: Request, res: Response, next: NextFunction) => {
@@ -76,5 +81,7 @@ export class ProductsController implements IRestController {
         } else {
             res.status(400).send("Id is not a number");
         }
+
+        next();
     }
 }

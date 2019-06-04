@@ -1,5 +1,5 @@
-import { IRoutesProvider } from "./interfaces/routers/IRoutesProvider";
-import { ProductRoutes } from "./products/routes/ProductRoutes";
+import { IRoutesProvider } from "./interfaces/routers/routes-provider-interface";
+import { ProductRoutes } from "./products/routes/product-routes";
 import { Application } from "express";
 
 export class RouteInstaller {

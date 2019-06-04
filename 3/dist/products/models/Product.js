@@ -9,4 +9,4 @@ class Product {
     }
 }
 exports.Product = Product;
-//# sourceMappingURL=Product.js.map
+//# sourceMappingURL=product.js.map
