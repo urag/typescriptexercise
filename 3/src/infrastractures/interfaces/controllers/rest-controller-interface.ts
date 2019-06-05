@@ -9,4 +9,5 @@ export interface IRestController {
     post(req: Request, res: Response, next: NextFunction): void;
     put(req: Request, res: Response, next: NextFunction): void;
     delete(req: Request, res: Response, next: NextFunction): void;
+    getValidator(func: Function): Function;
 }

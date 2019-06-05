@@ -4,11 +4,20 @@ import { IRestController } from "../../../infrastractures/interfaces/controllers
 import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { CategorieDemeRepository } from "../repositorys/categories-repo";
 import { Categorie } from "../model/categorie";
+import { idValidation, nameValidation } from "../../../infrastractures/utils/validation-utils"
 
 
 export class CategoriesController implements IRestController {
 
     private categoriesRepository: ICrudRepository = new CategorieDemeRepository();
+
+    getValidator(func: Function): Function {
+        var map = new Map();
+        map.set(this.getById, idValidation);
+        map.set(this.delete, idValidation)
+        return map.get(func);
+    }
+
 
     get = (req: Request, res: Response, next: NextFunction) => {
         res.send(this.categoriesRepository.getAll())
@@ -17,16 +26,14 @@ export class CategoriesController implements IRestController {
 
     getById = (req: Request, res: Response, next: NextFunction) => {
         var id: number = req.params.id;
-        if (!isNaN(id)) {
-            var categorie = this.categoriesRepository.getById(id);
-            if (categorie) {
-                res.send(categorie);
-            } else {
-                res.sendStatus(404);
-            }
+
+        var categorie = this.categoriesRepository.getById(id);
+        if (categorie) {
+            res.send(categorie);
         } else {
-            res.status(401).send("Id is not a number");
+            throw new Error('{"status":"404","message":"Category not found"}');
         }
+
         next();
     }
 

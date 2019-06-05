@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const categories_repo_1 = require("../repositorys/categories-repo");
+const validation_utils_1 = require("../../../infrastractures/utils/validation-utils");
 class CategoriesController {
     constructor() {
         this.categoriesRepository = new categories_repo_1.CategorieDemeRepository();
@@ -10,17 +11,12 @@ class CategoriesController {
         };
         this.getById = (req, res, next) => {
             var id = req.params.id;
-            if (!isNaN(id)) {
-                var categorie = this.categoriesRepository.getById(id);
-                if (categorie) {
-                    res.send(categorie);
-                }
-                else {
-                    res.sendStatus(404);
-                }
+            var categorie = this.categoriesRepository.getById(id);
+            if (categorie) {
+                res.send(categorie);
             }
             else {
-                res.status(401).send("Id is not a number");
+                throw new Error('{"status":"404","message":"Category not found"}');
             }
             next();
         };
@@ -82,6 +78,12 @@ class CategoriesController {
             }
             next();
         };
+    }
+    getValidator(func) {
+        var map = new Map();
+        map.set(this.getById, validation_utils_1.idValidation);
+        map.set(this.delete, validation_utils_1.idValidation);
+        return map.get(func);
     }
 }
 exports.CategoriesController = CategoriesController;
