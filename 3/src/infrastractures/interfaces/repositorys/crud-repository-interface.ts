@@ -7,4 +7,5 @@ export interface ICrudRepository {
   getById(id: any): any;
   getAll(): any[];
   removeById(id: any): any;
+  findBy(predicate: ((value: any, index: number, obj: any[]) => boolean)): any[];
 }

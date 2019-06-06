@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const categorie_1 = require("../model/categorie");
 class CategorieDemeRepository {
+    findBy(predicate) {
+        return CategorieDemeRepository.categories.filter(predicate);
+    }
     save(obj) {
         var categorie = this.getById(obj.id);
         if (categorie) {
@@ -33,9 +36,9 @@ class CategorieDemeRepository {
     }
 }
 CategorieDemeRepository.categories = [
-    new categorie_1.Categorie("123", "Drinks"),
-    new categorie_1.Categorie("456", "Food"),
-    new categorie_1.Categorie("789", "Electronics")
+    new categorie_1.Categorie("1", "Drinks"),
+    new categorie_1.Categorie("2", "Food"),
+    new categorie_1.Categorie("3", "Electronics")
 ];
 exports.CategorieDemeRepository = CategorieDemeRepository;
 //# sourceMappingURL=categories-repo.js.map

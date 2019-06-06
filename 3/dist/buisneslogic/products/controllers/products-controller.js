@@ -69,11 +69,23 @@ class ProductsController {
             }
             next();
         };
+        this.getByCategorieId = (req, res, next) => {
+            var categoryId = req.params.id;
+            var products = this.productsRepository.findBy(p => p.categoryId === categoryId);
+            if (products) {
+                res.send(products);
+            }
+            else {
+                res.sendStatus(404);
+            }
+            next();
+        };
     }
     getValidator(func) {
         var map = new Map();
         map.set(this.getById, validation_utils_1.idValidation);
         map.set(this.delete, validation_utils_1.idValidation);
+        map.set(this.getByCategorieId, validation_utils_1.idValidation);
         map.set(this.post, validation_utils_1.nameValidation);
         map.set(this.put, validation_utils_1.nameValidation);
         return map.get(func);

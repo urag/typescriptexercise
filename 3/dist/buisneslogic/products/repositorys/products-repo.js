@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const product_1 = require("../models/product");
 class ProductDemeRepository {
+    findBy(predicate) {
+        return ProductDemeRepository.products.filter(predicate);
+    }
     save(obj) {
         var product = this.getById(obj.id);
         if (product) {
@@ -34,9 +37,9 @@ class ProductDemeRepository {
     }
 }
 ProductDemeRepository.products = [
-    new product_1.Product("132423", "Drinks", "CocaCola", 20),
-    new product_1.Product("23432", "Electronics", "PS4", 50),
-    new product_1.Product("32342", "Electronics", "Nokia Phone", 35)
+    new product_1.Product("1", "1", "CocaCola", 20),
+    new product_1.Product("2", "3", "PS4", 50),
+    new product_1.Product("3", "3", "Nokia Phone", 35)
 ];
 exports.ProductDemeRepository = ProductDemeRepository;
 //# sourceMappingURL=products-repo.js.map

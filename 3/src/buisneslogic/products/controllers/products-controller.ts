@@ -13,6 +13,7 @@ export class ProductsController implements IRestController {
         var map = new Map();
         map.set(this.getById, idValidation);
         map.set(this.delete, idValidation)
+        map.set(this.getByCategorieId, idValidation);
         map.set(this.post, nameValidation)
         map.set(this.put, nameValidation)
         return map.get(func);
@@ -83,6 +84,19 @@ export class ProductsController implements IRestController {
         } else {
             res.status(400).send("Id is not a number");
         }
+
+        next();
+    }
+
+    getByCategorieId = (req: Request, res: Response, next: NextFunction) => {
+        var categoryId: any = req.params.id;
+        var products = this.productsRepository.findBy(p => p.categoryId === categoryId);
+        if (products) {
+            res.send(products);
+        } else {
+            res.sendStatus(404);
+        }
+
 
         next();
     }

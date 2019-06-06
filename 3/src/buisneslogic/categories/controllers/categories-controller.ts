@@ -19,6 +19,7 @@ export class CategoriesController implements IRestController {
     }
 
 
+    
     get = (req: Request, res: Response, next: NextFunction) => {
         res.send(this.categoriesRepository.getAll())
         next();

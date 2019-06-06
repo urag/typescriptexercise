@@ -3,10 +3,15 @@ import { Product } from "../models/product";
 
 export class ProductDemeRepository implements ICrudRepository {
   private static products: Product[] = [
-    new Product("132423", "Drinks", "CocaCola", 20),
-    new Product("23432", "Electronics", "PS4", 50),
-    new Product("32342", "Electronics", "Nokia Phone", 35)
+    new Product("1", "1", "CocaCola", 20),
+    new Product("2", "3", "PS4", 50),
+    new Product("3", "3", "Nokia Phone", 35)
   ];
+
+
+  findBy(predicate: (value: any, index: number, obj: any[]) => boolean): any[] {
+    return ProductDemeRepository.products.filter(predicate);
+  }
 
   save(obj: Product): Product | undefined {
     var product = this.getById(obj.id);
