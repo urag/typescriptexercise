@@ -2,6 +2,9 @@ import { UsersDemoRepository } from "../../buisneslogic/users/repositorys/users-
 import { ICrudRepository } from "../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { User } from "../../buisneslogic/users/model/user";
 import { logger } from "../utils/logger"
+const passportJwt = require('passport-jwt');
+const JwtStrategy = passportJwt.Strategy;
+const ExtractJwt = passportJwt.ExtractJwt
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -20,6 +23,13 @@ export class OauthInstaller {
                     callback(null, false, { message: 'failed' });
                 }
             }));
+
+        passport.use(new JwtStrategy(
+            {
+                jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+                , secretOrKey: 'theSecret',
+            },
+            (jwtPayload: User, callback: Function) => callback(null, usersRepo.getById(jwtPayload.email))));
     }
 }
 

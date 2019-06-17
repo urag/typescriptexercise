@@ -5,6 +5,8 @@ import { NextFunction } from 'connect';
 var express = require("express");
 var cors = require("cors");
 var app = express();
+const passport = require('passport');
+
 
 var login = require('./infrastractures/security/login-route');
 var PORT = 3000;
@@ -20,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 
-new RouteInstaller(app);
 app.use(login.router);
+app.use("/api/products/", passport.authenticate('jwt', { session: false }));
+new RouteInstaller(app);
 export { app };

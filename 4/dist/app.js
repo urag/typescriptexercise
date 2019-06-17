@@ -7,6 +7,7 @@ var express = require("express");
 var cors = require("cors");
 var app = express();
 exports.app = app;
+const passport = require('passport');
 var login = require('./infrastractures/security/login-route');
 var PORT = 3000;
 // Configuring server
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
 });
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-new routs_installer_1.RouteInstaller(app);
 app.use(login.router);
+app.use("/api/products/", passport.authenticate('jwt', { session: false }));
+new routs_installer_1.RouteInstaller(app);
 //# sourceMappingURL=app.js.map
