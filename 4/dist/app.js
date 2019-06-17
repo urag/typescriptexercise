@@ -20,5 +20,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(login.router);
 app.use("/api/products/", passport.authenticate('jwt', { session: false }));
+app.post("/api/products/", (req, res, next) => {
+    const user = req.user;
+    if (user.role != 'ADMIN') {
+        res.sendStatus(403);
+    }
+    else {
+        next();
+    }
+});
 new routs_installer_1.RouteInstaller(app);
 //# sourceMappingURL=app.js.map
