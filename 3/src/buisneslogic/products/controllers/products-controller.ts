@@ -35,8 +35,6 @@ export class ProductsController implements IRestController {
             res.sendStatus(404);
         }
 
-        throw new Error('{"status":"404","message":"Product not found"}');
-
         next();
     }
 
