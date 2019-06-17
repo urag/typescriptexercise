@@ -7,6 +7,7 @@ var express = require("express");
 var cors = require("cors");
 var app = express();
 exports.app = app;
+var login = require('./infrastractures/security/login-route');
 var PORT = 3000;
 // Configuring server
 app.use(express.json());
@@ -17,4 +18,5 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 new routs_installer_1.RouteInstaller(app);
+app.use(login.router);
 //# sourceMappingURL=app.js.map

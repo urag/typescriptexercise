@@ -5,6 +5,8 @@ import { NextFunction } from 'connect';
 var express = require("express");
 var cors = require("cors");
 var app = express();
+
+var login = require('./infrastractures/security/login-route');
 var PORT = 3000;
 
 // Configuring server
@@ -19,4 +21,5 @@ app.use(cors());
 
 
 new RouteInstaller(app);
+app.use(login.router);
 export { app };
