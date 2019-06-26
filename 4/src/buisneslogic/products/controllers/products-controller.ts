@@ -5,6 +5,7 @@ import { IRestController } from "../../../infrastractures/interfaces/controllers
 import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { idValidation, nameValidation } from "../../../infrastractures/utils/validation-utils"
 
+
 export class ProductsController implements IRestController {
 
     private productsRepository: ICrudRepository = new ProductDemeRepository();

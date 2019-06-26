@@ -1,9 +1,11 @@
 import { RouteInstaller } from './routs-installer';
 import { logger } from "./infrastractures/utils/logger";
 import { NextFunction } from 'connect';
-import {  Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { User } from './buisneslogic/users/model/user';
-// Server bootstrap file
+import { schema } from "./infrastractures/utils/validator"
+
+const Joi = require('joi');
 var express = require("express");
 var cors = require("cors");
 var app = express();
@@ -25,13 +27,30 @@ app.use(cors());
 
 app.use(login.router);
 app.use("/api/products/", passport.authenticate('jwt', { session: false }));
-app.post("/api/products/", (req: Request, res: Response, next: NextFunction) => {
+
+
+
+const adminValidation = (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as User;
     if (user.role != 'ADMIN') {
         res.sendStatus(403);
-    } else {
+    }
+    else {
         next();
     }
-});
+};
+app.post("/api/products/", adminValidation);
+app.put("/api/products/", adminValidation);
+
+const productValidate = (req: Request, res: Response, next: NextFunction) => {
+    const result = Joi.validate(req.body, schema);
+    if(result.error){
+        throw new Error(result.error.message);
+    }
+    next();
+};
+app.post("/api/products/", productValidate);
+app.put("/api/products/", productValidate);
+
 new RouteInstaller(app);
 export { app };
