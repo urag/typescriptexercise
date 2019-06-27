@@ -15,6 +15,9 @@ var login = require('./infrastractures/security/login-route');
 var PORT = 3000;
 // Configuring server
 app.use(express.json());
+const pathToStaticDir = path_1.join(__dirname, 'static');
+console.log("Static path", pathToStaticDir);
+app.use('/static', express.static(pathToStaticDir));
 app.use((req, res, next) => {
     logger_1.logger.info(req.method + " " + req.url + " body:" + JSON.stringify(req.body, null, 4));
     next();
@@ -46,8 +49,5 @@ const productValidate = (req, res, next) => {
 };
 app.post("/api/products/", productValidate);
 app.put("/api/products/", productValidate);
-const pathToStaticDir = path_1.join(__dirname, 'static');
-console.log("Static path", pathToStaticDir);
-app.use('/static', express.static(pathToStaticDir));
 new routs_installer_1.RouteInstaller(app);
 //# sourceMappingURL=app.js.map

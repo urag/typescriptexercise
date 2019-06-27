@@ -1,7 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const product_1 = require("../models/product");
+const http = require('http');
 class ProductDemeRepository {
+    constructor() {
+        http.get('http://127.0.0.1:3000/static/products.json', (resp) => {
+            let data = '';
+            // A chunk of data has been recieved.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+            // The whole response has been received. Print out the result.
+            resp.on('end', () => {
+                ProductDemeRepository.products = JSON.parse(data);
+                console.log("Got products from static file ", ProductDemeRepository.products);
+            });
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
+        });
+    }
     findBy(predicate) {
         return ProductDemeRepository.products.filter(predicate);
     }
@@ -36,10 +52,5 @@ class ProductDemeRepository {
         }
     }
 }
-ProductDemeRepository.products = [
-    new product_1.Product("1", "1", "CocaCola", 20),
-    new product_1.Product("2", "3", "PS4", 50),
-    new product_1.Product("3", "3", "Nokia Phone", 35)
-];
 exports.ProductDemeRepository = ProductDemeRepository;
 //# sourceMappingURL=products-repo.js.map

@@ -1,7 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const categorie_1 = require("../model/categorie");
+const http = require('http');
 class CategorieDemeRepository {
+    constructor() {
+        http.get('http://127.0.0.1:3000/static/categories.json', (resp) => {
+            let data = '';
+            // A chunk of data has been recieved.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+            // The whole response has been received. Print out the result.
+            resp.on('end', () => {
+                CategorieDemeRepository.categories = JSON.parse(data);
+                console.log("Got categories from static file ", CategorieDemeRepository.categories);
+            });
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
+        });
+    }
     findBy(predicate) {
         return CategorieDemeRepository.categories.filter(predicate);
     }
@@ -35,10 +51,5 @@ class CategorieDemeRepository {
         }
     }
 }
-CategorieDemeRepository.categories = [
-    new categorie_1.Categorie("1", "Drinks"),
-    new categorie_1.Categorie("2", "Food"),
-    new categorie_1.Categorie("3", "Electronics")
-];
 exports.CategorieDemeRepository = CategorieDemeRepository;
 //# sourceMappingURL=categories-repo.js.map

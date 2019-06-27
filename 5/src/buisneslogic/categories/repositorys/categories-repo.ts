@@ -1,13 +1,31 @@
 import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { Categorie } from "../model/categorie";
+import { Response } from "express-serve-static-core";
+
+const http = require('http');
 
 export class CategorieDemeRepository implements ICrudRepository {
-  private static categories: Categorie[] = [
-    new Categorie("1", "Drinks"),
-    new Categorie("2", "Food"),
-    new Categorie("3", "Electronics")
-  ];
+  private static categories: Categorie[];
 
+  constructor() {
+    http.get('http://127.0.0.1:3000/static/categories.json', (resp: Response) => {
+      let data = '';
+
+      // A chunk of data has been recieved.
+      resp.on('data', (chunk: any) => {
+        data += chunk;
+      });
+
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        CategorieDemeRepository.categories = JSON.parse(data);
+        console.log("Got categories from static file ", CategorieDemeRepository.categories);
+      });
+
+    }).on("error", (err: Error) => {
+      console.log("Error: " + err.message);
+    });
+  }
 
   findBy(predicate: (value: any, index: number, obj: any[]) => boolean): any[] {
     return CategorieDemeRepository.categories.filter(predicate);

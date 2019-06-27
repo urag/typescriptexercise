@@ -1,13 +1,30 @@
 import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { Product } from "../models/product";
+import { Response } from "express-serve-static-core";
+const http = require('http');
 
 export class ProductDemeRepository implements ICrudRepository {
-  private static products: Product[] = [
-    new Product("1", "1", "CocaCola", 20),
-    new Product("2", "3", "PS4", 50),
-    new Product("3", "3", "Nokia Phone", 35)
-  ];
+  private static products: Product[];
 
+  constructor() {
+    http.get('http://127.0.0.1:3000/static/products.json', (resp: Response) => {
+      let data = '';
+
+      // A chunk of data has been recieved.
+      resp.on('data', (chunk: any) => {
+        data += chunk;
+      });
+
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        ProductDemeRepository.products = JSON.parse(data);
+        console.log("Got products from static file ", ProductDemeRepository.products);
+      });
+
+    }).on("error", (err: Error) => {
+      console.log("Error: " + err.message);
+    });
+  }
 
   findBy(predicate: (value: any, index: number, obj: any[]) => boolean): any[] {
     return ProductDemeRepository.products.filter(predicate);
