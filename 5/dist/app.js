@@ -4,6 +4,7 @@ const routs_installer_1 = require("./routs-installer");
 const logger_1 = require("./infrastractures/utils/logger");
 const validator_1 = require("./infrastractures/utils/validator");
 const config_1 = require("./infrastractures/config/config");
+const path_1 = require("path");
 const Joi = require('joi');
 var express = require("express");
 var cors = require("cors");
@@ -45,5 +46,8 @@ const productValidate = (req, res, next) => {
 };
 app.post("/api/products/", productValidate);
 app.put("/api/products/", productValidate);
+const pathToStaticDir = path_1.join(__dirname, 'static');
+console.log("Static path", pathToStaticDir);
+app.use('/static', express.static(pathToStaticDir));
 new routs_installer_1.RouteInstaller(app);
 //# sourceMappingURL=app.js.map

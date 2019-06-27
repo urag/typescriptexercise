@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import { User } from './buisneslogic/users/model/user';
 import { schema } from "./infrastractures/utils/validator"
 import { AUTH_ON } from "./infrastractures/config/config";
-
+import { join } from "path";
 const Joi = require('joi');
 var express = require("express");
 var cors = require("cors");
@@ -57,5 +57,8 @@ const productValidate = (req: Request, res: Response, next: NextFunction) => {
 app.post("/api/products/", productValidate);
 app.put("/api/products/", productValidate);
 
+const pathToStaticDir = join(__dirname, 'static');
+console.log("Static path", pathToStaticDir);
+app.use('/static', express.static(pathToStaticDir));
 new RouteInstaller(app);
 export { app };
