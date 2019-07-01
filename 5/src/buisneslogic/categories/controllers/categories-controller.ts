@@ -19,10 +19,10 @@ export class CategoriesController implements IRestController {
     }
 
 
-    
+
     get = (req: Request, res: Response, next: NextFunction) => {
-        res.send(this.categoriesRepository.getAll())
-        next();
+        const categories = this.categoriesRepository.getAll();
+        res.render('categories', { categories: categories })
     }
 
     getById = (req: Request, res: Response, next: NextFunction) => {

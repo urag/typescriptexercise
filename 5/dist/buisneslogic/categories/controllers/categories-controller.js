@@ -6,8 +6,8 @@ class CategoriesController {
     constructor() {
         this.categoriesRepository = new categories_repo_1.CategorieDemeRepository();
         this.get = (req, res, next) => {
-            res.send(this.categoriesRepository.getAll());
-            next();
+            const categories = this.categoriesRepository.getAll();
+            res.render('categories', { categories: categories });
         };
         this.getById = (req, res, next) => {
             var id = req.params.id;

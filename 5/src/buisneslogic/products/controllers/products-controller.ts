@@ -22,11 +22,7 @@ export class ProductsController implements IRestController {
 
 
     get = (req: Request, res: Response, next: NextFunction) => {
-        res.render('products', {
-            pageTitle: "Products list",
-            products: this.productsRepository.getAll()
-        })
-       // next();
+        res.render('products', { products: this.productsRepository.getAll() })
     }
 
     getById = (req: Request, res: Response, next: NextFunction) => {
