@@ -22,8 +22,11 @@ export class ProductsController implements IRestController {
 
 
     get = (req: Request, res: Response, next: NextFunction) => {
-        res.send(this.productsRepository.getAll())
-        next();
+        res.render('products', {
+            pageTitle: "Products list",
+            products: this.productsRepository.getAll()
+        })
+       // next();
     }
 
     getById = (req: Request, res: Response, next: NextFunction) => {

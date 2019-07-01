@@ -11,6 +11,8 @@ var cors = require("cors");
 var app = express();
 exports.app = app;
 const passport = require('passport');
+var exphbs = require('express-handlebars');
+installTemplateEngine();
 // Configuring server
 app.use(express.json());
 installStaticResponses();
@@ -18,6 +20,16 @@ installLogging();
 installSecurityt();
 installRequestsValidation();
 new routs_installer_1.RouteInstaller(app);
+function installTemplateEngine() {
+    app.set('views', path_1.join(__dirname, 'views'));
+    app.engine('handlebars', exphbs({
+        defaultLayout: 'main',
+        helpers: {
+            increment: (v) => v + 1,
+        },
+    }));
+    app.set('view engine', 'handlebars');
+}
 function installRequestsValidation() {
     const productValidate = (req, res, next) => {
         const result = Joi.validate(req.body, validator_1.schema);
