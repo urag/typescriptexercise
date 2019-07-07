@@ -6,8 +6,7 @@ class ProductsController {
     constructor() {
         this.productsRepository = new products_repo_1.ProductDemeRepository();
         this.get = (req, res, next) => {
-            res.send(this.productsRepository.getAll());
-            next();
+            res.render('products', { products: this.productsRepository.getAll() });
         };
         this.getById = (req, res, next) => {
             var id = req.params.id;
