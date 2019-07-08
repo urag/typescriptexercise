@@ -6,12 +6,16 @@ import { User } from './buisneslogic/users/model/user';
 import { schema } from "./infrastractures/utils/validator"
 import { AUTH_ON } from "./infrastractures/config/config";
 import { join } from "path";
+import { MongoConnection } from "./infrastractures/dbconnection/mongo-connection";
+import { DB_CONNECTION_URI } from "./infrastractures/config/config";
+
 const Joi = require('joi');
 var express = require("express");
 var cors = require("cors");
 var app = express();
 const passport = require('passport');
 var exphbs = require('express-handlebars');
+
 
 installTemplateEngine();
 
@@ -22,9 +26,15 @@ installStaticResponses();
 installLogging();
 installSecurityt();
 installRequestsValidation();
+init();
 
-new RouteInstaller(app);
 export { app };
+
+async function init() {
+    const connection = new MongoConnection(DB_CONNECTION_URI + "/store");
+    await connection.connect();
+    new RouteInstaller(app);
+}
 
 function installTemplateEngine() {
     app.set('views', join(__dirname, 'views'));

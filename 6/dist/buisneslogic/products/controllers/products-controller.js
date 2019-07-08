@@ -1,12 +1,20 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const products_repo_1 = require("../repositorys/products-repo");
+const products_mogno_repo_1 = require("../repositorys/products-mogno-repo");
 const validation_utils_1 = require("../../../infrastractures/utils/validation-utils");
+const mongo_connection_1 = require("../../../infrastractures/dbconnection/mongo-connection");
 class ProductsController {
     constructor() {
-        this.productsRepository = new products_repo_1.ProductDemeRepository();
         this.get = (req, res, next) => {
-            res.render('products', { products: this.productsRepository.getAll() });
+            this.asyncGet(req, res, next);
         };
         this.getById = (req, res, next) => {
             var id = req.params.id;
@@ -22,13 +30,8 @@ class ProductsController {
         this.post = (req, res, next) => {
             const product = req.body;
             // Adding only if product with given id is not pressent yeat
-            if (this.productsRepository.getById(product.id) == null) {
-                this.productsRepository.save(product);
-                res.sendStatus(201);
-            }
-            else {
-                res.status(409).send("Product with given id is already present");
-            }
+            this.productsRepository.save(product);
+            res.sendStatus(201);
             next();
         };
         this.put = (req, res, next) => {
@@ -78,6 +81,7 @@ class ProductsController {
             }
             next();
         };
+        this.productsRepository = new products_mogno_repo_1.ProductsMongoRepository(mongo_connection_1.MongoConnection.db);
     }
     getValidator(func) {
         var map = new Map();
@@ -87,6 +91,12 @@ class ProductsController {
         map.set(this.post, validation_utils_1.nameValidation);
         map.set(this.put, validation_utils_1.nameValidation);
         return map.get(func);
+    }
+    asyncGet(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const allProducts = yield this.productsRepository.getAll();
+            res.render('products', { products: allProducts });
+        });
     }
 }
 exports.ProductsController = ProductsController;

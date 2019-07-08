@@ -1,13 +1,21 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const categories_repo_1 = require("../repositorys/categories-repo");
 const validation_utils_1 = require("../../../infrastractures/utils/validation-utils");
+const categories_mogno_repo_1 = require("../repositorys/categories-mogno-repo");
+const mongo_connection_1 = require("../../../infrastractures/dbconnection/mongo-connection");
 class CategoriesController {
     constructor() {
-        this.categoriesRepository = new categories_repo_1.CategorieDemeRepository();
+        this.categoriesRepository = new categories_mogno_repo_1.CategoriesMongoRepository(mongo_connection_1.MongoConnection.db);
         this.get = (req, res, next) => {
-            const categories = this.categoriesRepository.getAll();
-            res.render('categories', { categories: categories });
+            this.asyncGet(req, res, next);
         };
         this.getById = (req, res, next) => {
             var id = req.params.id;
@@ -23,17 +31,12 @@ class CategoriesController {
         this.post = (req, res, next) => {
             const categorie = req.body;
             // Adding only if categorie with given id is not pressent yeat
-            if (this.categoriesRepository.getById(categorie.id) == null) {
-                if (categorie.name.length >= 3) {
-                    this.categoriesRepository.save(categorie);
-                    res.sendStatus(201);
-                }
-                else {
-                    res.status(409).send("Name needs to be at least 3 characters");
-                }
+            if (categorie.name.length >= 3) {
+                this.categoriesRepository.save(categorie);
+                res.sendStatus(201);
             }
             else {
-                res.status(409).send("Categorie with given id is already present");
+                res.status(409).send("Name needs to be at least 3 characters");
             }
             next();
         };
@@ -84,6 +87,12 @@ class CategoriesController {
         map.set(this.getById, validation_utils_1.idValidation);
         map.set(this.delete, validation_utils_1.idValidation);
         return map.get(func);
+    }
+    asyncGet(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const allProducts = yield this.categoriesRepository.getAll();
+            res.render('products', { products: allProducts });
+        });
     }
 }
 exports.CategoriesController = CategoriesController;

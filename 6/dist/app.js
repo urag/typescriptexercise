@@ -1,10 +1,20 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const routs_installer_1 = require("./routs-installer");
 const logger_1 = require("./infrastractures/utils/logger");
 const validator_1 = require("./infrastractures/utils/validator");
 const config_1 = require("./infrastractures/config/config");
 const path_1 = require("path");
+const mongo_connection_1 = require("./infrastractures/dbconnection/mongo-connection");
+const config_2 = require("./infrastractures/config/config");
 const Joi = require('joi');
 var express = require("express");
 var cors = require("cors");
@@ -19,7 +29,14 @@ installStaticResponses();
 installLogging();
 installSecurityt();
 installRequestsValidation();
-new routs_installer_1.RouteInstaller(app);
+init();
+function init() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const connection = new mongo_connection_1.MongoConnection(config_2.DB_CONNECTION_URI + "/store");
+        yield connection.connect();
+        new routs_installer_1.RouteInstaller(app);
+    });
+}
 function installTemplateEngine() {
     app.set('views', path_1.join(__dirname, 'views'));
     app.engine('handlebars', exphbs({

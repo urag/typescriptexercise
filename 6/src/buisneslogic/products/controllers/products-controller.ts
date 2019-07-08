@@ -1,14 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import { ProductDemeRepository } from "../repositorys/products-repo";
+import { ProductsMongoRepository } from "../repositorys/products-mogno-repo";
 import { Product } from "../models/product";
 import { IRestController } from "../../../infrastractures/interfaces/controllers/rest-controller-interface";
 import { ICrudRepository } from "../../../infrastractures/interfaces/repositorys/crud-repository-interface";
 import { idValidation, nameValidation } from "../../../infrastractures/utils/validation-utils"
-
+import { MongoConnection } from "../../../infrastractures/dbconnection/mongo-connection"
 
 export class ProductsController implements IRestController {
 
-    private productsRepository: ICrudRepository = new ProductDemeRepository();
+    private productsRepository: ICrudRepository;
+
+    constructor() {
+        this.productsRepository = new ProductsMongoRepository(MongoConnection.db);
+    }
 
     getValidator(func: Function): Function {
         var map = new Map();
@@ -22,7 +26,12 @@ export class ProductsController implements IRestController {
 
 
     get = (req: Request, res: Response, next: NextFunction) => {
-        res.render('products', { products: this.productsRepository.getAll() })
+        this.asyncGet(req, res, next);
+    }
+
+    async asyncGet(req: Request, res: Response, next: NextFunction) {
+        const allProducts = await this.productsRepository.getAll();
+        res.render('products', { products: allProducts })
     }
 
     getById = (req: Request, res: Response, next: NextFunction) => {
@@ -40,12 +49,8 @@ export class ProductsController implements IRestController {
     post = (req: Request, res: Response, next: NextFunction) => {
         const product = req.body as Product;
         // Adding only if product with given id is not pressent yeat
-        if (this.productsRepository.getById(product.id) == null) {
-            this.productsRepository.save(product);
-            res.sendStatus(201);
-        } else {
-            res.status(409).send("Product with given id is already present");
-        }
+        this.productsRepository.save(product);
+        res.sendStatus(201);
         next();
     }
 
