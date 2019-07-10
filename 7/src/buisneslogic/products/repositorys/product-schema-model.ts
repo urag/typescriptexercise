@@ -3,9 +3,9 @@ import { Schema, Document, Model, Mongoose,model } from 'mongoose';
 
 const schema = new Schema(
     {
-        id: { type: String, unique: true },
+        id: { type: Number, unique: true },
         name: { type: String },
-        categoryId: { type: String },
+        categoryId: { type: Number },
         itemsInStock: { type: String },
 
     },

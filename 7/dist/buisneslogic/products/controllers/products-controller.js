@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const validation_utils_1 = require("../../../infrastractures/utils/validation-utils");
 const product_schema_model_1 = require("../repositorys/product-schema-model");
+const categories_schema_model_1 = require("../../categories/repositorys/categories-schema-model");
 class ProductsController {
     constructor() {
         this.get = (req, res, next) => {
@@ -32,8 +33,21 @@ class ProductsController {
                 res.sendStatus(201);
                 next();
             };
-            // Adding only if product with given id is not pressent yeat
-            product_schema_model_1.getProductDB().insertMany(product).then(accepted, rejected);
+            const categorieIdIsFineHandler = categorieFound => {
+                if (categorieFound.length == 1) {
+                    // Adding only if product with given id is not pressent yeat
+                    product_schema_model_1.getProductDB().insertMany(product).then(accepted, rejected);
+                }
+                else {
+                    res.status(404).send("Categorie with id " + product.categoryId + " does not exists");
+                    next();
+                }
+            };
+            const categorieIdWrong = err => {
+                res.status(404).send(product.categoryId + " cannot be a categorie id");
+                next();
+            };
+            categories_schema_model_1.getCategoiesDB().find({ id: product.categoryId }).then(categorieIdIsFineHandler, categorieIdWrong);
         };
         this.put = (req, res, next) => {
             var productId = req.params.id;
@@ -80,14 +94,6 @@ class ProductsController {
             }
         };
         this.getByCategorieId = (req, res, next) => {
-            // var categoryId: any = req.params.id;
-            // this.productsRepository.findBy(p => p.categoryId === categoryId).then(products => {
-            //     if (products) {
-            //         res.send(products);
-            //     } else {
-            //         res.sendStatus(404);
-            //     }
-            // });
             var categoryIdToSearch = req.params.id;
             product_schema_model_1.getProductDB().find({ categoryId: categoryIdToSearch }).then(product => {
                 if (product) {

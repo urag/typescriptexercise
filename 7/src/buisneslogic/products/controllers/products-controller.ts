@@ -3,13 +3,15 @@ import { Product } from "../models/product";
 import { IRestController } from "../../../infrastractures/interfaces/controllers/rest-controller-interface";
 import { idValidation, nameValidation } from "../../../infrastractures/utils/validation-utils"
 import { getProductDB } from "../repositorys/product-schema-model";
+import { getCategoiesDB } from "../../categories/repositorys/categories-schema-model";
+
 export class ProductsController implements IRestController {
 
     getValidator(func: Function): Function {
         var map = new Map();
         map.set(this.getById, idValidation);
         map.set(this.delete, idValidation)
-       // map.set(this.getByCategorieId, idValidation);
+        // map.set(this.getByCategorieId, idValidation);
         map.set(this.post, nameValidation)
         map.set(this.put, nameValidation)
         return map.get(func);
@@ -48,8 +50,22 @@ export class ProductsController implements IRestController {
             next();
         };
 
-        // Adding only if product with given id is not pressent yeat
-        getProductDB().insertMany(product).then(accepted, rejected)
+        const categorieIdIsFineHandler: ((value: import("mongoose").Document[]) => void | PromiseLike<void>) | null | undefined = categorieFound => {
+            if (categorieFound.length == 1) {
+                // Adding only if product with given id is not pressent yeat
+                getProductDB().insertMany(product).then(accepted, rejected);
+            }
+            else {
+                res.status(404).send("Categorie with id " + product.categoryId + " does not exists");
+                next();
+            }
+        };
+        const categorieIdWrong: ((reason: any) => void | PromiseLike<void>) | null | undefined = err => {
+            res.status(404).send(product.categoryId + " cannot be a categorie id");
+            next();
+        };
+
+        getCategoiesDB().find({ id: product.categoryId }).then(categorieIdIsFineHandler, categorieIdWrong)
     }
 
     put = (req: Request, res: Response, next: NextFunction) => {
@@ -96,16 +112,6 @@ export class ProductsController implements IRestController {
     }
 
     getByCategorieId = (req: Request, res: Response, next: NextFunction) => {
-        // var categoryId: any = req.params.id;
-        // this.productsRepository.findBy(p => p.categoryId === categoryId).then(products => {
-        //     if (products) {
-        //         res.send(products);
-        //     } else {
-        //         res.sendStatus(404);
-        //     }
-
-        // });
-
         var categoryIdToSearch: any = req.params.id;
         getProductDB().find({ categoryId: categoryIdToSearch }).then(product => {
 
