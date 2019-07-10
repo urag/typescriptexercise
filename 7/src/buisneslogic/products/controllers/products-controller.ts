@@ -9,7 +9,7 @@ export class ProductsController implements IRestController {
         var map = new Map();
         map.set(this.getById, idValidation);
         map.set(this.delete, idValidation)
-        map.set(this.getByCategorieId, idValidation);
+       // map.set(this.getByCategorieId, idValidation);
         map.set(this.post, nameValidation)
         map.set(this.put, nameValidation)
         return map.get(func);
@@ -17,14 +17,14 @@ export class ProductsController implements IRestController {
 
 
     get = (req: Request, res: Response, next: NextFunction) => {
-        getProductDB().find({},"name categoryId").then(result => {
+        getProductDB().find({}, "id name categoryId itemsInStock").then(result => {
             res.render('products', { products: result })
         })
     }
 
     getById = (req: Request, res: Response, next: NextFunction) => {
-        var id: number = req.params.id;
-        getProductDB().find({}).then(product => {
+        var productId: number = req.params.id;
+        getProductDB().find({ id: productId }, "id name categoryId itemsInStock").then(product => {
 
             if (product) {
                 res.send(product);
@@ -37,49 +37,62 @@ export class ProductsController implements IRestController {
 
     post = (req: Request, res: Response, next: NextFunction) => {
         const product = req.body as Product;
-        // Adding only if product with given id is not pressent yeat
-        getProductDB().insertMany(product).catch(reason=>{
-            console
 
-        });
-        res.sendStatus(201);
-        next();
+        const rejected: ((value: import("mongoose").Document) => void | PromiseLike<void>) | null | undefined = rejected => {
+            console.log("Duplicate id");
+            res.status(400).send("Duplicate key");
+            next();
+        };
+        const accepted: ((reason: any) => void | PromiseLike<void>) | null | undefined = reason => {
+            res.sendStatus(201);
+            next();
+        };
+
+        // Adding only if product with given id is not pressent yeat
+        getProductDB().insertMany(product).then(accepted, rejected)
     }
 
     put = (req: Request, res: Response, next: NextFunction) => {
-        // var id: number = req.params.id;
-        // if (!isNaN(id)) {
-        //     var product = this.getById(id);
-        //     if (product) {
-        //         const productForUpdate = req.body as Product;
-        //         productForUpdate.id = id.toString();
-        //         DbProduct.insertMany(productForUpdate);
-        //         res.send(productForUpdate);
-        //     } else {
-        //         res.sendStatus(404);
-        //     }
-        // } else {
-        //     res.status(401).send("Id is not a number");
-        // }
-
-        next();
+        var productId: number = req.params.id;
+        if (!isNaN(productId)) {
+            const productForUpdate = req.body as Product;
+            getProductDB().update({ id: productId }, productForUpdate).then(result => {
+                let obj: any = result
+                if (obj.nModified == 1) {
+                    console.log("Update product with id", productId);
+                    res.sendStatus(200);
+                } else {
+                    console.log("Not update product with id", productId);
+                    res.sendStatus(204);
+                }
+                next();
+            })
+        } else {
+            res.status(401).send("Id is not a number");
+            next();
+        }
     }
 
     delete = (req: Request, res: Response, next: NextFunction) => {
-        // var id: number = req.params.id;
-        // if (!isNaN(id)) {
-        //     var product = this.productsRepository.getById(id);
-        //     if (product) {
-        //         this.productsRepository.removeById(id);
-        //         res.sendStatus(200);
-        //     } else {
-        //         res.sendStatus(404);
-        //     }
-        // } else {
-        //     res.status(400).send("Id is not a number");
-        // }
+        var productId: number = req.params.id;
+        if (!isNaN(productId)) {
+            const productForUpdate = req.body as Product;
+            getProductDB().deleteOne({ id: productId }).then(result => {
+                let obj: any = result
+                if (obj.deletedCount > 0) {
+                    console.log("Deleted product with id", productId);
+                    res.sendStatus(200);
+                } else {
+                    console.log("Not deleted product with id", productId);
+                    res.sendStatus(204);
+                }
+                next();
+            })
+        } else {
+            res.status(400).send("Id is not a number");
+            next();
+        }
 
-        next();
     }
 
     getByCategorieId = (req: Request, res: Response, next: NextFunction) => {
@@ -93,6 +106,15 @@ export class ProductsController implements IRestController {
 
         // });
 
-        next();
+        var categoryIdToSearch: any = req.params.id;
+        getProductDB().find({ categoryId: categoryIdToSearch }).then(product => {
+
+            if (product) {
+                res.send(product);
+            } else {
+                res.sendStatus(404);
+            }
+            next();
+        });
     }
 }
