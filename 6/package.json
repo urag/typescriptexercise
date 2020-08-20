@@ -22,7 +22,7 @@
     "@types/express-handlebars": "0.0.32",
     "@types/joi": "^14.3.3",
     "@types/mongodb": "^3.1.28",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.0",
